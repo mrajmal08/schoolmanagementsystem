@@ -6,6 +6,11 @@
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
     <!-- Custom Stylesheet -->
-    <link href="./plugins/tables/css/datatable/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="css/animate/animate.min.css" rel="stylesheet">
+    <link href="css/datatable/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="css/datatable/buttons.bootstrap4.min.css" rel="stylesheet">
+    <link href="css/datatable/select.dataTables.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <link href="css/school.css" rel="stylesheet">
+
+    <script src="js/common/common.min.js"></script>

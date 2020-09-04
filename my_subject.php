@@ -1,7 +1,7 @@
 <?php
 session_start();
 include "includes/config.php";
-include "functions.php";
+include "function/functions.php";
 $user_id = $_SESSION['sess_user_id'];
 ?>
 
@@ -23,7 +23,7 @@ $user_id = $_SESSION['sess_user_id'];
 <div id="preloader">
     <div class="loader">
         <svg class="circular" viewBox="25 25 50 50">
-            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10"/>
         </svg>
     </div>
 </div>
@@ -52,7 +52,7 @@ $user_id = $_SESSION['sess_user_id'];
         </div>
     </div>
     <?php include 'includes/header.php' ?>
-    <?php  include "includes/sidebar.php"; ?>
+    <?php include "includes/sidebar.php"; ?>
     <div class="content-body">
         <div class="container-fluid">
             <div class="row">
@@ -61,33 +61,14 @@ $user_id = $_SESSION['sess_user_id'];
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-4 text-left mt-2">
-                                    <span class="card-title text-black font-weight-semi-bold ">My Subjects</span>
+                                <span class="card-title text-black font-weight-semi-bold ">
+                                    My Subjects</span>
                                 </div>
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-bordered zero-configuration">
-                                        <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Number</th>
-
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
-                                        $result = user_class_subject($conn, $user_id, 'subject');
-                                        foreach ($result as $row){
-                                            ?>
-                                            <tr>
-                                                <td><?= $row['name'] ?></td>
-                                                <td><?= $row['author'] ?></td>
-
-                                            </tr>
-                                            <?php
-                                        }
-                                        ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <?php
+                                $thead = ['Subject Name', 'Author Name'];
+                                $tbody = user_class_subject($conn, $user_id, 'subject');
+                                datatable($conn, $thead, $tbody);
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -95,27 +76,10 @@ $user_id = $_SESSION['sess_user_id'];
             </div>
             <!-- #/ container -->
         </div>
-        <!--**********************************
-            Content body end
-        ***********************************-->
-
-
-        <!--**********************************
-            Footer start
-        ***********************************-->
         <?php include 'includes/footer.php'; ?>
-        <!--**********************************
-            Footer end
-        ***********************************-->
     </div>
-    <!--**********************************
-        Main wrapper end
-    ***********************************-->
 
-    <!--**********************************
-        Scripts
-    ***********************************-->
-    <script src="plugins/common/common.min.js"></script>
+
     <script src="js/custom.min.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/gleek.js"></script>

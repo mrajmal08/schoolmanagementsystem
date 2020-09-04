@@ -1,7 +1,7 @@
 <?php
 session_start();
 include "includes/config.php";
-include "functions.php";
+include "function/functions.php";
 ?>
 
 <!DOCTYPE html>
@@ -25,8 +25,8 @@ include "functions.php";
         <div class="nav-header">
             <div class="brand-logo">
                 <a href="home.php">
-                    <b class="logo-abbr"><img src="images/logo.png" alt=""> </b>
-                    <span class="logo-compact"><img src="./images/logo-compact.png" alt=""></span>
+                    <b class="logo-abbr"><img src="#" alt=""> </b>
+                    <span class="logo-compact"><img src="#" alt=""></span>
                     <span class="brand-title text-white">
                        School Management System
                     </span>
@@ -55,15 +55,15 @@ include "functions.php";
     <!--**********************************
         Scripts
     ***********************************-->
-    <script src="plugins/common/common.min.js"></script>
+
     <script src="js/custom.min.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/gleek.js"></script>
     <script src="js/styleSwitcher.js"></script>
 
-    <script src="./plugins/tables/js/jquery.dataTables.min.js"></script>
-    <script src="./plugins/tables/js/datatable/dataTables.bootstrap4.min.js"></script>
-    <script src="./plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
+    <script src="plugins/tables/js/jquery.dataTables.min.js"></script>
+    <script src="plugins/tables/js/datatable/dataTables.bootstrap4.min.js"></script>
+    <script src="plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
 
 </body>
 

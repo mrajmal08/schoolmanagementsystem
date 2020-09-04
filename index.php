@@ -29,8 +29,8 @@
         <div class="row page-titles mx-0">
             <div class="col p-md-0">
                 <div class="breadcrumb">
-                    <li class="mr-3"><a href="page-register.php">Register</a></li>
-                    <li class=" active"><a href="page-login.php">Login</a></li>
+                    <li class="mr-3"><a href="register.php">Register</a></li>
+                    <li class=" active"><a href="login.php">Login</a></li>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
 <!--**********************************
     Scripts
 ***********************************-->
-<script src="plugins/common/common.min.js"></script>
+
 <script src="js/custom.min.js"></script>
 <script src="js/settings.js"></script>
 <script src="js/gleek.js"></script>
