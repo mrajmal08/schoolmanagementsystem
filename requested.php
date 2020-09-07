@@ -4,13 +4,13 @@ include "includes/config.php";
 include "function/functions.php";
 //user request approval code
 
-if(isset($_GET['type']) && $_GET['type'] == 'approve'){
+if (isset($_GET['type']) && $_GET['type'] == 'approve') {
     $user_id = $_GET['id'];
     approve_req($conn, $user_id);
     header('location: requested');
     exit;
 //User request delete code
-}elseif(isset($_GET['type']) && $_GET['type'] == 'un_approve'){
+} elseif (isset($_GET['type']) && $_GET['type'] == 'un_approve') {
     $user_id = $_GET['id'];
     $values = [
         'id' => $user_id
@@ -37,7 +37,7 @@ if(isset($_GET['type']) && $_GET['type'] == 'approve'){
     <div class="loader">
         <svg class="circular" viewBox="25 25 50 50">
             <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3"
-                    stroke-miterlimit="10" />
+                    stroke-miterlimit="10"/>
         </svg>
     </div>
 </div>
@@ -45,7 +45,7 @@ if(isset($_GET['type']) && $_GET['type'] == 'approve'){
 <div id="main-wrapper">
     <div class="nav-header">
         <div class="brand-logo">
-            <a href="home.php">
+            <a href="home">
                 <b class="logo-abbr"><img src="#" alt=""> </b>
                 <span class="logo-compact"><img src="#" alt=""></span>
                 <span class="brand-title text-white">
@@ -55,49 +55,49 @@ if(isset($_GET['type']) && $_GET['type'] == 'approve'){
         </div>
     </div>
 
-    <?php  include 'includes/header.php'; ?>
-    <?php  include "includes/sidebar.php"; ?>
-<div class="content-body">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-4 text-left mt-2">
+    <?php include 'includes/header.php'; ?>
+    <?php include "includes/sidebar.php"; ?>
+    <div class="content-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-4 text-left mt-2">
                                 <span class="card-title text-black font-weight-semi-bold ">
                                     Requested Users</span>
+                                </div>
+                                <!--Table for approval request of users-->
+                                <?php
+
+
+                                $thead = ['Name', 'Email', 'Address', 'Contact', 'Gender', 'Action'];
+                                $tbody = fetch_requested_data($conn);
+                                $action = [
+                                    'button1' => [
+                                        'value' => 'approve',
+                                        'url' => 'requested',
+                                        'require' => ['id'],
+                                        'class' => 'btn btn-danger btn-sm'
+                                    ],
+                                    'button2' => [
+                                        'value' => 'un_approve',
+                                        'url' => 'requested',
+                                        'require' => ['id'],
+                                        'class' => 'btn btn-warning btn-sm'
+                                    ],
+
+                                ];
+                                datatable($conn, $thead, $tbody, $action);
+                                ?>
                             </div>
-                            <!--Table for approval request of users-->
-                            <?php
-
-
-                            $thead = ['Name', 'Email', 'Address', 'Contact', 'Gender', 'Action'];
-                            $tbody = fetch_requested_data($conn);
-                            $action = [
-                                'button1' => [
-                                    'value' => 'approve',
-                                    'url' => 'requested',
-                                    'require' => ['id'],
-                                    'class' => 'btn btn-danger btn-sm'
-                                ],
-                                'button2' => [
-                                    'value' => 'un_approve',
-                                    'url' => 'requested',
-                                    'require' => ['id'],
-                                    'class' => 'btn btn-warning btn-sm'
-                                ],
-
-                            ];
-                            datatable($conn, $thead, $tbody, $action);
-                            ?>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
             <!-- #/ container -->
-    </div>
+        </div>
         <!--**********************************
             Footer start
         ***********************************-->

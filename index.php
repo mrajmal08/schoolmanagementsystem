@@ -29,8 +29,8 @@
         <div class="row page-titles mx-0">
             <div class="col p-md-0">
                 <div class="breadcrumb">
-                    <li class="mr-3"><a href="register.php">Register</a></li>
-                    <li class=" active"><a href="login.php">Login</a></li>
+                    <li class="mr-3"><a href="register">Register</a></li>
+                    <li class=" active"><a href="login">Login</a></li>
                 </div>
             </div>
         </div>

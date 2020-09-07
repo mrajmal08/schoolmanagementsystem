@@ -31,7 +31,7 @@ $user_id = $_SESSION['sess_user_id'];
     ***********************************-->
     <div class="nav-header">
         <div class="brand-logo">
-            <a href="index.php">
+            <a href="index">
                 <b class="logo-abbr"><img src="images/logo.png" alt=""> </b>
                 <span class="logo-compact"><img src="./images/logo-compact.png" alt=""></span>
                 <span class="brand-title text-white">

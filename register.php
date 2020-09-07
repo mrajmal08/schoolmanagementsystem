@@ -47,7 +47,7 @@ if (isset($_POST['submitForm'])) {
     $values = [':name', ':email', ':password', ':address', ':contact', ':gender', ':role'];
     $final = insert($conn, 'user', $columns, $values, $data);
     if ($final) {
-        header('location: page-login');
+        header('location: login');
         exit;
     }
 
@@ -119,7 +119,7 @@ if (isset($_POST['submitForm'])) {
                                     <select class="form-control form-control-lg" name="role" required>
                                         <option disabled selected>--Select Role--</option>
                                         <?php
-                                        $result = show($conn, 'role', '');
+                                        $result = show($conn, 'role',false, '');
                                         foreach ($result as $row) {
                                             ?>
                                             <option value="<?= $row['id'] ?>"><?= $row['name'] ?></option>

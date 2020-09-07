@@ -12,20 +12,15 @@ if (isset($_GET['type']) && $_GET['type'] == 'un_assign') {
             'subject_id' => $subject_id
         ];
         delete($conn, 'user_has_subject', $values);
-
         $user_id = $_GET['user_id'];
-        $where = [
-            'id' => $user_id,
-        ];
-        $data = show($conn, 'user', $where);
+        $where = 'id =' . $user_id;
+        $data = show($conn, 'user', 1, $where);
 
     }
 } else {
     $user_id = $_GET['id'];
-    $where = [
-        'id' => $user_id,
-    ];
-    $data = show($conn, 'user', $where);
+    $where = 'id =' . $user_id;
+    $data = show($conn, 'user', 1, $where);
 }
 
 //for assigning the subject
@@ -50,20 +45,20 @@ if (isset($_POST['user_id'])) {
                         <a href="student.php" class="btn btn-success float-left text-white"><span
                                     class="fa fa-backward "> All Students</span> </a>
                         <a class="text-center" href="home.php"><h4>Assign Subject to
-                                <?= $data[0]['name']; ?>
+                                <?= $data['name']; ?>
                             </h4></a>
                         <form method="post" action=""
                               class="mt-5 mb-5 login-input">
                             <div class="row">
                                 <div class="col-6">
                                     <input type="hidden" name="user_id"
-                                           value="<?php echo $data[0]['id']; ?>"/>
+                                           value="<?php echo $data['id']; ?>"/>
                                     <div class="mb-2 form-group">
                                         <select class="form-control form-control-lg" name="subject_id"
                                                 required>
                                             <option disabled selected>--Select Subject--</option>
                                             <?php
-                                            $result = show($conn,'subject', '');
+                                            $result = show($conn, 'subject', false, '');
                                             foreach ($result as $row) {
                                                 ?>
                                                 <option value="<?= $row['id'] ?>"><?= $row['name'] ?>
@@ -97,12 +92,12 @@ if (isset($_POST['user_id'])) {
                         <div class="row">
                             <div class="col-4 text-left mt-2">
                                 <span class="card-title text-black font-weight-semi-bold ">
-                                    Assigned Subjects of <?= $data[0]['name']; ?> </span>
+                                    Assigned Subjects of <?= $data['name']; ?> </span>
                             </div>
                             <!--table for assigned subjects-->
                             <?php
                             $thead = ['Subject Name', 'Author Name', 'Actions'];
-                            $user_id = $data[0]['id'];
+                            $user_id = $data['id'];
                             $tbody = user_class_subject($conn, $user_id, 'subject');
                             $action = [
                                 'button1' => [

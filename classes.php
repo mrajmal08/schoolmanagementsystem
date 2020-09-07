@@ -11,24 +11,20 @@ $check_validation = 1;
 if (isset($_GET['type']) && $_GET['type'] == 'edit') {
     if (isset($_GET['id'])) {
         $class_id = $_GET['id'];
-        $where = [
-            'id' => $class_id,
-        ];
-        $outcome = show($conn, 'class', $where);
+
+        $where = 'id =' . $class_id;
+        $outcome = show($conn, 'class', 1, $where);
     }
 }
 if (isset($_POST['edit'])) {
     unset($_POST['edit']);
     unset($_POST['submitClass']);
     $data['data'] = $_POST;
-    $data['where'] = [
-        'id' => $_POST['class_id'],
-//            'email' => $_POST['email']
-    ];
+    $where = "id = " . $_POST['class_id'];
     unset($data['data']['class_id']);
-    $final = update($conn, 'class', $data);
+    $final = update($conn, 'class', $data, $where);
     if ($final) {
-        header('location: classes.php');
+        header('location: classes');
         exit;
     }
     //Class submit code here
@@ -75,22 +71,22 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
             <div class="form-input-content col-12">
                 <div class="card login-form mb-0">
                     <div class="card-body pt-5">
-                        <a class="text-center" href="home.php"><h4>Fill the
-                                <?php echo isset($outcome[0]['name']) ?
-                                 $outcome[0]['name'] : ""; ?> Detail</h4></a>
+                        <a class="text-center" href="home"><h4>Fill the
+                                <?php echo isset($outcome['name']) ?
+                                    $outcome['name'] : ""; ?> Detail</h4></a>
                         <!-- class adding and editing code with validation error code -->
                         <form method="post" action="classes.php" class="mt-5 mb-5 login-input">
                             <div class="row">
                                 <div class="col-6">
                                     <input type="hidden" name="class_id" value="
-                                    <?php echo isset($outcome[0]['id']) ?
-                                     $outcome[0]['id'] : ""; ?>"/>
+                                    <?php echo isset($outcome['id']) ?
+                                        $outcome['id'] : ""; ?>"/>
                                     <div class="form-group">
                                         <label class="card-title">Class Name</label>
                                         <input type="text" class="form-control" name="name"
                                                placeholder="Enter Name"
-                                               value="<?php echo isset($outcome[0]['name']) ?
-                                               $outcome[0]['name'] : ""; ?>"
+                                               value="<?php echo isset($outcome['name']) ?
+                                                   $outcome['name'] : ""; ?>"
                                                required>
                                         <?php if (isset($output_name)) echo $output_name; ?>
                                     </div>
@@ -98,8 +94,8 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
                                         <label class="card-title">Class No</label>
                                         <input type="text" class="form-control" name="number"
                                                placeholder="123..."
-                                               value="<?php echo isset($outcome[0]['number']) ?
-                                                   $outcome[0]['number'] : ""; ?>"
+                                               value="<?php echo isset($outcome['number']) ?
+                                                   $outcome['number'] : ""; ?>"
                                                required>
                                     </div>
                                     <?php
@@ -134,7 +130,7 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
                             </div>
                             <?php
                             $thead = ['Class Name', 'Class Number', 'Actions'];
-                            $tbody = show($conn,'class', '');
+                            $tbody = show($conn, 'class', false, '');
                             $action = [
                                 'button1' => [
                                     'value' => 'delete',

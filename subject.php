@@ -12,24 +12,20 @@ $check_validation = 1;
 if (isset($_GET['type']) && $_GET['type'] == 'edit') {
     if (isset($_GET['id'])) {
         $subject_id = $_GET['id'];
-        $where = [
-            'id' => $subject_id,
-        ];
-        $outcome = show($conn,'subject', $where);
+
+        $where = 'id =' . $subject_id;
+        $outcome = show($conn, 'subject', false, $where);
     }
 }
 if (isset($_POST['edit'])) {
     unset($_POST['edit']);
     unset($_POST['submitSubject']);
     $data['data'] = $_POST;
-    $data['where'] = [
-        'id' => $_POST['subject_id'],
-//            'email' => $_POST['email']
-    ];
+    $where = "id = " . $_POST['subject_id'];
     unset($data['data']['subject_id']);
-    $final = update($conn, 'subject', $data);
+    $final = update($conn, 'subject', $data, $where);
     if ($final) {
-        header('location: subject.php');
+        header('location: subject');
         exit;
     }
     //subject add code here
@@ -137,7 +133,7 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
                             </div>
                             <?php
                             $thead = ['Class Name', 'Auhtor Name', 'Actions'];
-                            $tbody = show($conn, 'subject', '');
+                            $tbody = show($conn, 'subject', false, '');
                             $action = [
                                 'button1' => [
                                     'value' => 'delete',

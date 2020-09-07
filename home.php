@@ -24,7 +24,7 @@ include "function/functions.php";
     <div id="main-wrapper">
         <div class="nav-header">
             <div class="brand-logo">
-                <a href="home.php">
+                <a href="home">
                     <b class="logo-abbr"><img src="#" alt=""> </b>
                     <span class="logo-compact"><img src="#" alt=""></span>
                     <span class="brand-title text-white">

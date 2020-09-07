@@ -23,24 +23,19 @@ if ($session_role == 1) {
 if (isset($_GET['type']) && $_GET['type'] == 'edit') {
     if (isset($_GET['id'])) {
         $user_id = $_GET['id'];
-        $where = [
-            'id' => $user_id,
-        ];
-        $user = show($conn, 'user', $where);
+
+        $where = 'id =' . $user_id;
+        $user = show($conn, 'user', 1, $where);
     }
 }
 if (isset($_POST['edit'])) {
     unset($_POST['edit']);
     unset($_POST['submitPrincipal']);
     $data['data'] = $_POST;
-    $data['where'] = [
-        'id' => $_POST['id'],
-//            'email' => $_POST['email']
-    ];
+    $where = "id = " . $_POST['id'];
     unset($data['data']['id']);
-
-    $datap = update($conn, 'user', $data);
-    if ($datap) {
+    $answer = update($conn, 'user', $data, $where);
+    if ($answer) {
         header('location: principal.php');
         exit;
     }
@@ -111,29 +106,29 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
             <div class="form-input-content col-12">
                 <div class="card login-form mb-0">
                     <div class="card-body pt-5">
-                        <h4>Fill Up The <?php echo isset($user[0]['name']) ? $user[0]['name'] : ""; ?>
+                        <h4>Fill Up The <?php echo isset($user['name']) ? $user['name'] : ""; ?>
                             Details</h4>
                         <!--Principal ad and principal edit form -->
                         <form method="post" action="" class="mt-5 mb-5 login-input">
                             <div class="row">
                                 <div class="col-6">
                                     <input type="hidden" name="id"
-                                           value="<?php echo isset($user[0]['id']) ?
-                                               $user[0]['id'] : ""; ?>"/>
+                                           value="<?php echo isset($user['id']) ?
+                                               $user['id'] : ""; ?>"/>
                                     <div class="form-group">
                                         <label class="card-title">Name</label>
                                         <input type="text" class="form-control" name="name"
                                                placeholder="Enter Name"
-                                               value="<?php echo isset($user[0]['name']) ?
-                                                   $user[0]['name'] : ""; ?>"
+                                               value="<?php echo isset($user['name']) ?
+                                                   $user['name'] : ""; ?>"
                                                required>
                                         <?php if (isset($output_name)) echo $output_name; ?>
                                     </div>
                                     <div class="form-group">
                                         <label class="card-title">Email</label>
                                         <input type="text" class="form-control" name="email"
-                                               value="<?php echo isset($user[0]['email']) ?
-                                                   $user[0]['email'] : ""; ?>"
+                                               value="<?php echo isset($user['email']) ?
+                                                   $user['email'] : ""; ?>"
                                                placeholder="test@test.com" required>
                                         <?php if (isset($output_email)) echo $output_email; ?>
                                     </div>
@@ -141,8 +136,8 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
                                     <div class="form-group">
                                         <label class="card-title">Address</label>
                                         <input type="text" class="form-control" name="address"
-                                               value="<?php echo isset($user[0]['address']) ?
-                                                   $user[0]['address'] : ""; ?>"
+                                               value="<?php echo isset($user['address']) ?
+                                                   $user['address'] : ""; ?>"
                                                placeholder="Enter Address">
                                     </div>
                                 </div>
@@ -150,8 +145,8 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
                                     <div class="form-group">
                                         <label class="card-title">Contact</label>
                                         <input type="number" class="form-control" name="contact"
-                                               value="<?php echo isset($user[0]['contact']) ?
-                                                   $user[0]['contact'] : ""; ?>"
+                                               value="<?php echo isset($user['contact']) ?
+                                                   $user['contact'] : ""; ?>"
                                                placeholder="000-0000-0000">
                                         <?php if (isset($output_contact))
                                             echo $output_contact; ?>
@@ -159,8 +154,8 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
                                     <div class="form-group">
                                         <label class="card-title">Password</label>
                                         <input type="password" class="form-control" name="password"
-                                               value="<?php echo isset($user[0]['password']) ?
-                                                   $user[0]['password'] : ""; ?>"
+                                               value="<?php echo isset($user['password']) ?
+                                                   $user['password'] : ""; ?>"
                                                placeholder="******" required>
                                         <?php if (isset($output_password)) echo $output_password; ?>
                                     </div>
@@ -168,15 +163,15 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
                                     <div class="form-group">
                                         <label class="radio-inline mr-3" data-children-count="1">
                                             <input type="radio" class="" value="male"
-                                                <?php if (isset($user[0]['gender']) &&
-                                                    $user[0]['gender'] == 'male')
+                                                <?php if (isset($user['gender']) &&
+                                                    $user['gender'] == 'male')
                                                     echo 'checked="checked"'; ?>
                                                    required name="gender">
                                             Male</label>
                                         <label class="radio-inline mr-3" data-children-count="1">
                                             <input type="radio" value="female"
-                                                <?php if (isset($user[0]['gender'])
-                                                    && $user[0]['gender'] == 'female')
+                                                <?php if (isset($user['gender'])
+                                                    && $user['gender'] == 'female')
                                                     echo 'checked="checked"'; ?>
                                                    required name="gender"> Female</label>
                                     </div>
@@ -212,12 +207,9 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
                             </div>
                             <!-- Principal table code-->
                             <?php
-                            $thead = ['Name', 'Email', 'Address', 'Contact', 'Gender', 'Action'];
-                            $where = [
-                                'status' => 1,
-                                'role_id' => 2
-                            ];
-                            $tbody = show($conn, 'user', $where);
+                            $thead = ['Name', 'Email', 'Password', 'Address', 'Contact', 'Gender', 'Action'];
+                            $where = "status = 1 AND role_id = 2";
+                            $tbody = show($conn, 'user', false, $where);
 
                             $action = [
                                 'button1' => [

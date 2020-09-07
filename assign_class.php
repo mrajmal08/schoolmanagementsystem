@@ -15,18 +15,13 @@ if (isset($_GET['type'])) {
             delete($conn, 'user_has_class', $values);
 
             $user_id = $_GET['user_id'];
-            $where = [
-                'id' => $user_id,
-            ];
-
-            $data = show($conn,'user', $where);
+            $where = 'id =' . $user_id;
+            $data = show($conn, 'user', 1, $where);
         }
     } else {
         $user_id = $_GET['id'];
-        $where = [
-            'id' => $user_id,
-        ];
-        $data = show($conn, 'user', $where);
+        $where = 'id =' . $user_id;
+        $data = show($conn, 'user', 1, $where);
     }
 }
 
@@ -42,7 +37,7 @@ if (isset($_POST['submit'])) {
 ?>
 
 <!--Include file contain head, header, and side bar-->
-<?php include 'includes/include.php';  ?>
+<?php include 'includes/include.php'; ?>
 <div class="content-body">
     <div class="login-form-bg mt-3 mb-3 ">
         <div class="row ml-3 mr-3">
@@ -52,19 +47,19 @@ if (isset($_POST['submit'])) {
                         <a href="student.php" class="btn btn-success float-left text-white"><span
                                     class="fa fa-backward "> All Students</span> </a>
                         <a class="text-center" href="home.php"><h4>
-                                Assign Class to <?= $data[0]['name']; ?></h4></a>
+                                Assign Class to <?= $data['name']; ?></h4></a>
                         <form method="post" action=""
                               class="mt-5 mb-5 login-input">
                             <div class="row">
                                 <div class="col-6">
                                     <input type="hidden" name="user_id"
-                                           value="<?php echo $data[0]['id']; ?>"/>
+                                           value="<?php echo $data['id']; ?>"/>
                                     <div class="mb-2 form-group">
                                         <select class="form-control form-control-lg" name="class_id"
                                                 required>
                                             <option disabled selected>--Select class--</option>
                                             <?php
-                                            $result = show($conn, 'class', '');
+                                            $result = show($conn, 'class', false, '');
                                             foreach ($result as $row) {
                                                 ?>
                                                 <option value="<?= $row['id'] ?>"><?= $row['name'] ?>
@@ -99,12 +94,12 @@ if (isset($_POST['submit'])) {
                         <div class="row">
                             <div class="col-4 text-left mt-2">
                                 <span class="card-title text-black font-weight-semi-bold ">
-                                    Assigned Class of <?= $data[0]['name']; ?> </span>
+                                    Assigned Class of <?= $data['name']; ?> </span>
                             </div>
                             <!--table for assigned classes-->
                             <?php
                             $thead = ['Class Name', 'Class Number', 'Actions'];
-                            $user_id = $data[0]['id'];
+                            $user_id = $data['id'];
                             $tbody = user_class_subject($conn, $user_id, 'class');
                             $action = [
                                 'button1' => [

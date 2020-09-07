@@ -2,34 +2,37 @@
 include "includes/config.php";
 
 /**
- *
+ * this function return fetched data adn required table name and where condition
  * @param $conn
  * @param $table
  * @param bool $where
- * @param null $query
  * @return mixed
  */
-function show($conn, $table, $where = false )
+function show($conn, $table, $single_user = false, $where = false)
 {
-        //query string
-        $query = "SELECT * FROM {$table} ";
-        if (!empty($where)) {
-            $query .= "WHERE ";
-            $i = 0;
-            foreach ($where as $key => $value) {
-                if ($i == count($where) - 1) {
-                    $query .= "{$key} = {$value}";
-                } else {
-                    $query .= "{$key} = {$value} AND ";
-                }
-                $i++;
-            }
-        }
-    $data = $conn->query($query);
-    return $data->fetchAll(PDO::FETCH_ASSOC);
+    //query string
+    $query = "SELECT * FROM {$table} ";
+    if ($where) {
+        $query .= " WHERE " . $where;
+    }
+    if ($single_user) {
+        $data = $conn->query($query);
+        return $data->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $data = $conn->query($query);
+        return $data->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
-// insert function of all the tables
+/**
+ * This function used to insert the values of ay type of data given by columns,values and data
+ * @param $conn
+ * @param $table
+ * @param $columns
+ * @param $values
+ * @param $data
+ * @return string
+ */
 function insert($conn, $table, $columns, $values, $data)
 {
     try {
@@ -43,7 +46,13 @@ function insert($conn, $table, $columns, $values, $data)
     }
 }
 
-//delete function of all the tables
+/**
+ * this function used for delete the values
+ * @param $conn
+ * @param $table
+ * @param $values
+ * @return mixed
+ */
 function delete($conn, $table, $values)
 {
     $query = "DELETE FROM {$table} WHERE ";
@@ -60,58 +69,68 @@ function delete($conn, $table, $values)
     return $exe->execute();
 }
 
-//update function of all the tables
-function update($conn, $table, $data)
+/**
+ * update function fro ay type of data
+ * @param $conn
+ * @param $table
+ * @param $data
+ * @return mixed
+ */
+function update($conn, $table, $data, $where)
 {
-    $where = $data['where'];
-    $original = $data['data'];
-    $query = "UPDATE {$table} set ";
-    $count = 0;
-    foreach ($original as $key => $value) {
-        if ($count == count($original) - 1) {
-            $query .= $key . " = '{$value}'";
-        } else {
-            $query .= $key . " = '{$value}', ";
+    try {
+        $original = $data['data'];
+        $cols = [];
+        foreach ($original as $key => $value) {
+            $cols[] = "$key = '$value'";
         }
-        $count++;
+        $query = "UPDATE $table SET " . implode(', ', $cols) . " WHERE $where";
+        $exe = $conn->prepare($query);
+        return $exe->execute();
+    } catch (PDOException $e) {
+        return "Error : " . $e->getMessage();
     }
-    //if query goes with AND after where
-    $count = 0;
-    $query .= " WHERE ";
-    foreach ($where as $key => $value) {
-        if ($count == count($where) - 1) {
-            $query .= $key . " = '{$value}' ";
-        } else {
-            $query .= $key . " = '{$value}' AND ";
-        }
-        $count++;
-    }
-    $exe = $conn->prepare($query);
-    return $exe->execute();
 }
 
-//this function is for approval new users request
+/**
+ * this function user for approve the user request
+ * @param $conn
+ * @param $user_id
+ * @return mixed
+ */
 function approve_req($conn, $user_id)
 {
     if (!empty($user_id)) {
         $data['data'] = ['status' => 1];
-        $data['where'] = [
-            'id' => $user_id,
-        ];
-        return update($conn, 'user', $data);
+        $where = "id = ". $user_id;
+        return update($conn, 'user', $data, $where);
     }
 }
 
-function get_data_for_query($conn, $query){
-    if(!empty($query)){}
+/**
+ * this function used only for query execution
+ * @param $conn
+ * @param $query
+ * @return mixed
+ */
+function get_data_for_query($conn, $query)
+{
+    if (!empty($query)) {
+    }
     $data = $conn->query($query);
     return $data->fetchAll(PDO::FETCH_ASSOC);
 }
 
-//this function display the class and subject by comparing with user
+/**
+ * this function used to fetch the data of the class and subject only
+ * @param $conn
+ * @param $user_id
+ * @param null $type
+ * @return mixed
+ */
 function user_class_subject($conn, $user_id, $type = null)
 {
-    switch ($type){
+    switch ($type) {
         case 'class':
             $query = "SELECT class.id as id, class.name as classname, class.number as classnumber
                   FROM `user_has_class` 
@@ -120,17 +139,21 @@ function user_class_subject($conn, $user_id, $type = null)
             return get_data_for_query($conn, $query);
             break;
         case 'subject':
-            $query = "SELECT class.id as id, class.name as classname, class.number as classnumber
-                  FROM `user_has_class` 
-                  INNER JOIN user ON user_has_class.user_id = user.id 
-                  INNER JOIN class ON user_has_class.class_id = class.id WHERE user_id = $user_id";
+            $query = "SELECT subject.id as id, subject.name as subjectname, subject.author as authorname 
+                  FROM `user_has_subject` INNER JOIN user ON user_has_subject.user_id = user.id
+                  INNER JOIN subject ON user_has_subject.subject_id = subject.id WHERE
+                  user_id = $user_id";
             return get_data_for_query($conn, $query);
             break;
         default:
     }
 }
 
-// this function shows the specific data of user by comparing user id with role table
+/**
+ * this function is used for requested data whose status is zero
+ * @param $conn
+ * @return mixed
+ */
 function fetch_requested_data($conn)
 {
     $query = "SELECT user.id, user.name as username, user.email, user.address, user.contact, user.status,
@@ -139,7 +162,14 @@ function fetch_requested_data($conn)
     return get_data_for_query($conn, $query);
 }
 
-//assign the class and subject to the user
+/**
+ * this function used for assigning the class or subject to the user
+ * @param $conn
+ * @param $user_id
+ * @param null $class_id
+ * @param null $subject_id
+ * @return string
+ */
 function assign_class_subject($conn, $user_id, $class_id = null, $subject_id = null)
 {
     if (!empty($class_id)) {
@@ -150,19 +180,19 @@ function assign_class_subject($conn, $user_id, $class_id = null, $subject_id = n
                 'class_id' => $class_id,
             ];
             //getting columns and values for insert query
-            $where = [
-                'user_id' => $user_id,
-                'class_id' => $class_id
-            ];
-            $result = show($conn, 'user_has_class', $where);
-            if (isset($result[0]['user_id']) && isset($result[0]['class_id'])) {
-                if ($result[0]['user_id'] > 1 && $result[0]['class_id'] > 1) {
-                    return "Error : ";
+            $where = "user_id = ".$user_id. " AND class_id = ". $class_id;
+            $result = show($conn, 'user_has_class',false, $where);
+            if (isset($result['user_id']) && isset($result['class_id'])) {
+
+                if (empty($result['user_id']) && empty($result['class_id'])) {
+                    return "<span style='color: red'>class already asssigned</span>";
+
                 }
             } else {
                 //getting columns and values for insert query
                 $columns = ['user_id', 'class_id'];
                 $values = [':user_id', ':class_id'];
+
                 insert($conn, 'user_has_class', $columns, $values, $data);
             }
         } catch (PDOException $e) {
@@ -176,14 +206,11 @@ function assign_class_subject($conn, $user_id, $class_id = null, $subject_id = n
                 'subject_id' => $subject_id,
             ];
             //getting columns and values for insert query
-            $where = [
-                'user_id' => $user_id,
-                'subject_id' => $subject_id
-            ];
-            $result = show($conn, 'user_has_subject', $where);
-            if (isset($result[0]['user_id']) && isset($result[0]['subject_id'])) {
-                if ($result[0]['user_id'] > 1 && $result[0]['subject_id'] > 1) {
-                    return "<span style='color: red'> invalid email and password </span>";
+            $where = "user_id = ".$user_id. " AND subject_id = ". $subject_id;
+            $result = show($conn, 'user_has_subject', false, $where);
+            if (isset($result['user_id']) && isset($result['subject_id'])) {
+                if ($result['user_id'] > 1 && $result['subject_id'] > 1) {
+                    return "<span style='color: red'>subject already asssigned</span>";
                 }
             } else {
                 //getting columns and values for insert query
@@ -197,23 +224,24 @@ function assign_class_subject($conn, $user_id, $class_id = null, $subject_id = n
     }
 }
 
-//login user function
+/**
+ * login function
+ * @param $conn
+ * @param $email
+ * @param $password
+ * @return string
+ */
 function login_user($conn, $email, $password)
 {
     if ($email != "" && $password != "") {
         try {
             //check user for verification
-            $where = [
-                'email' => "'$email'",
-                'password' => "'$password'",
-                'status' => 1
-            ];
-            $row = show($conn, 'user', $where);
-            $count = count($row);
-            if ($count == 1 && !empty($row)) {
-                $_SESSION['sess_user_id'] = $row[0]['id'];
-                $_SESSION['sess_name'] = $row[0]['name'];
-                $_SESSION['role'] = $row[0]['role_id'];
+            $where = "email = " . $email . " AND password = " . $password . " AND status = 1";
+            $row = show($conn, 'user', 1, $where);
+            if (!empty($row) && $row) {
+                $_SESSION['sess_user_id'] = $row['id'];
+                $_SESSION['sess_name'] = $row['name'];
+                $_SESSION['role'] = $row['role_id'];
                 header("location: home");
                 exit;
             } else {
@@ -227,7 +255,13 @@ function login_user($conn, $email, $password)
     }
 }
 
-//dynamic function for datatable
+/**
+ * dybamic data table function used
+ * @param $conn
+ * @param $thead
+ * @param $tbody
+ * @param $action
+ */
 function datatable($conn, $thead, $tbody, $action)
 {
     ?>
@@ -272,6 +306,11 @@ function datatable($conn, $thead, $tbody, $action)
     <?php
 }
 
+/**
+ * buttons function for datatable
+ * @param $action
+ * @param $row
+ */
 function buttons($action, $row)
 {
     foreach ($action as $key => $button) {
@@ -279,7 +318,11 @@ function buttons($action, $row)
     }
 }
 
-//print button function
+/**
+ * this function print the buttons for datatable
+ * @param $button
+ * @param $row
+ */
 function printButton($button, $row)
 {
     $url = $button['url'] . '?type=' . $button['value'];
@@ -295,3 +338,4 @@ function printButton($button, $row)
     <a class="<?= $button['class'] ?>" href="<?= $url; ?>"><?= $button['value'] ?></a>
     <?php
 }
+
