@@ -1,10 +1,16 @@
 <?php
 include "includes/config.php";
 
-function show($conn, $table, $where, $query = '')
+/**
+ *
+ * @param $conn
+ * @param $table
+ * @param bool $where
+ * @param null $query
+ * @return mixed
+ */
+function show($conn, $table, $where = false )
 {
-    if (!empty($query)) {
-    } else {
         //query string
         $query = "SELECT * FROM {$table} ";
         if (!empty($where)) {
@@ -19,7 +25,6 @@ function show($conn, $table, $where, $query = '')
                 $i++;
             }
         }
-    }
     $data = $conn->query($query);
     return $data->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -97,23 +102,31 @@ function approve_req($conn, $user_id)
     }
 }
 
+function get_data_for_query($conn, $query){
+    if(!empty($query)){}
+    $data = $conn->query($query);
+    return $data->fetchAll(PDO::FETCH_ASSOC);
+}
+
 //this function display the class and subject by comparing with user
-function user_class_subject($conn, $user_id, $type = '')
+function user_class_subject($conn, $user_id, $type = null)
 {
-    if ($type == 'class') {
-        $query = "SELECT class.id as id, class.name as classname, class.number as classnumber
+    switch ($type){
+        case 'class':
+            $query = "SELECT class.id as id, class.name as classname, class.number as classnumber
                   FROM `user_has_class` 
                   INNER JOIN user ON user_has_class.user_id = user.id 
                   INNER JOIN class ON user_has_class.class_id = class.id WHERE user_id = $user_id";
-        return show($conn, '', '', $query);
-    } elseif ($type == 'subject') {
-        $query = "SELECT subject.id as id, subject.name as subjectname, subject.author as authorname 
-                  FROM `user_has_subject` INNER JOIN user ON user_has_subject.user_id = user.id
-                  INNER JOIN subject ON user_has_subject.subject_id = subject.id WHERE
-                  user_id = $user_id";
-        return show($conn, '', '', $query);
-    } else {
-        return "Error";
+            return get_data_for_query($conn, $query);
+            break;
+        case 'subject':
+            $query = "SELECT class.id as id, class.name as classname, class.number as classnumber
+                  FROM `user_has_class` 
+                  INNER JOIN user ON user_has_class.user_id = user.id 
+                  INNER JOIN class ON user_has_class.class_id = class.id WHERE user_id = $user_id";
+            return get_data_for_query($conn, $query);
+            break;
+        default:
     }
 }
 
@@ -123,13 +136,12 @@ function fetch_requested_data($conn)
     $query = "SELECT user.id, user.name as username, user.email, user.address, user.contact, user.status,
               role.name as rolename FROM user INNER JOIN role ON user.role_id = role.id WHERE
               user.status = 0";
-    return show($conn, '', '', $query);
+    return get_data_for_query($conn, $query);
 }
 
 //assign the class and subject to the user
-function assign_class_subject($conn, $user_id, $class_id = 0, $subject_id = 0)
+function assign_class_subject($conn, $user_id, $class_id = null, $subject_id = null)
 {
-
     if (!empty($class_id)) {
         try {
             //ids for show data
@@ -171,7 +183,7 @@ function assign_class_subject($conn, $user_id, $class_id = 0, $subject_id = 0)
             $result = show($conn, 'user_has_subject', $where);
             if (isset($result[0]['user_id']) && isset($result[0]['subject_id'])) {
                 if ($result[0]['user_id'] > 1 && $result[0]['subject_id'] > 1) {
-                    return "Error : ";
+                    return "<span style='color: red'> invalid email and password </span>";
                 }
             } else {
                 //getting columns and values for insert query

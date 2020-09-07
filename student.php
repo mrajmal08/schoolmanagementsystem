@@ -25,7 +25,7 @@ if (isset($_GET['type']) && $_GET['type'] == 'edit') {
         $where = [
             'id' => $user_id,
         ];
-        $user = show($conn, 'user', $where);
+        $user = show($conn,'user', $where);
     }
 }
 if (isset($_POST['edit'])) {
@@ -46,22 +46,6 @@ if (isset($_POST['edit'])) {
     //Student add code
 } elseif (isset($_POST['submitStudent'])) {
     $name = $_POST['name'];
-    if (!validation($name)) {
-        $output_name = "<span style='color: red'>Enter a valid Name</span>";
-        $check_validation = 0;
-    }
-    $email = $_POST['email'];
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $output_email = "<span style='color: red'>Enter a valid email address</span>";
-        $check_validation = 0;
-    }
-    $password = $_POST['password'];
-    if (!validation('', $password)) {
-        $output_password = "<span style='color: red'>Atleast 8 ch</span>";
-        $check_validation = 0;
-    }
-    $address = $_POST['address'];
-    $contact = $_POST['contact'];
     if (!name_validation($name)) {
         $output_name = "<span style='color: red'>Enter a valid Name</span>";
         $check_validation = 0;
@@ -101,7 +85,7 @@ if (isset($_POST['edit'])) {
         $final = insert($conn, 'user', $columns, $values, $data);
     }
     if ($final) {
-        header('location: teacher.php');
+        header('location: student');
         exit;
     }
 }
@@ -113,7 +97,7 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
             'id' => $user_id
         ];
         delete($conn, 'user', $values);
-        header('location: student.php');
+        header('location: student');
         exit;
     }
 }

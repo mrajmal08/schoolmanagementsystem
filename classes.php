@@ -134,7 +134,7 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
                             </div>
                             <?php
                             $thead = ['Class Name', 'Class Number', 'Actions'];
-                            $tbody = show($conn, 'class', '');
+                            $tbody = show($conn,'class', '');
                             $action = [
                                 'button1' => [
                                     'value' => 'delete',

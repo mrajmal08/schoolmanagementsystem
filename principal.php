@@ -85,7 +85,7 @@ if (isset($_POST['edit'])) {
         $final = insert($conn, 'user', $columns, $values, $data);
     }
     if ($final) {
-        header('location: teacher.php');
+        header('location: principal');
         exit;
     }
 }
@@ -97,7 +97,7 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
             'id' => $user_id
         ];
         delete($conn, 'user', $values);
-        header('location: principal.php');
+        header('location: principal');
         exit;
     }
 }

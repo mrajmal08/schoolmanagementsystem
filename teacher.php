@@ -87,7 +87,7 @@ elseif (isset($_POST['submitTeacher'])) {
         $final = insert($conn, 'user', $columns, $values, $data);
     }
     if ($final) {
-        header('location: teacher.php');
+        header('location: teacher');
         exit;
     }
 
@@ -100,7 +100,7 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
                'id' => $user_id
         ];
         delete($conn, 'user', $values);
-        header('location: teacher.php');
+        header('location: teacher');
         exit;
     }
 }
@@ -217,7 +217,7 @@ if (isset($_GET['type']) && $_GET['type'] == 'delete') {
                                 'status' => 1,
                                 'role_id' => 3
                             ];
-                            $tbody = show($conn, 'user', $where);
+                            $tbody = show($conn,'user', $where);
 
                             $action = [
                                 'button1' => [

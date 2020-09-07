@@ -19,7 +19,7 @@ if (isset($_GET['type'])) {
                 'id' => $user_id,
             ];
 
-            $data = show($conn, 'user', $where);
+            $data = show($conn,'user', $where);
         }
     } else {
         $user_id = $_GET['id'];

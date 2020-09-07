@@ -15,7 +15,7 @@ if (isset($_GET['type']) && $_GET['type'] == 'edit') {
         $where = [
             'id' => $subject_id,
         ];
-        $outcome = show($conn, 'subject', $where);
+        $outcome = show($conn,'subject', $where);
     }
 }
 if (isset($_POST['edit'])) {

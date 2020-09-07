@@ -63,7 +63,7 @@ if (isset($_POST['user_id'])) {
                                                 required>
                                             <option disabled selected>--Select Subject--</option>
                                             <?php
-                                            $result = show($conn, 'subject', '');
+                                            $result = show($conn,'subject', '');
                                             foreach ($result as $row) {
                                                 ?>
                                                 <option value="<?= $row['id'] ?>"><?= $row['name'] ?>

@@ -10,7 +10,7 @@ function name_validation($name)
 function password_validation($password)
 {
     if (!empty($password)) {
-        return preg_match("/^.{8,}$/", $password);
+        return preg_match("/^[\d]{8,}$/", $password);
     }
 }
 

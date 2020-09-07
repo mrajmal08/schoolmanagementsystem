@@ -3,7 +3,7 @@ $user_id =  $_SESSION['sess_user_id'];
 $where = [
     'id' => $user_id
 ];
-$header = show($conn, 'user', $where, '');
+$header = show($conn, 'user', $where);
 ?>
 <div class="header">
     <div class="header-content clearfix">
