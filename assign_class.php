@@ -60,7 +60,8 @@ if (isset($_POST['submit'])) {
                                     <input type="hidden" name="user_id"
                                            value="<?php echo $data[0]['id']; ?>"/>
                                     <div class="mb-2 form-group">
-                                        <select class="form-control form-control-lg" name="class_id" required>
+                                        <select class="form-control form-control-lg" name="class_id"
+                                                required>
                                             <option disabled selected>--Select class--</option>
                                             <?php
                                             $result = show($conn, 'class', '');

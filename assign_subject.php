@@ -38,7 +38,6 @@ if (isset($_POST['user_id'])) {
 }
 
 ?>
-
 <!--Include file contain head, header, and side bar-->
 <?php include 'includes/include.php'; ?>
 
