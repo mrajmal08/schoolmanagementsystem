@@ -8,11 +8,9 @@ if (isset($_GET['type'])) {
         if (isset($_GET['id'])) {
             $user_id = $_GET['user_id'];
             $class_id = $_GET['id'];
-            $values = [
-                'user_id' => $user_id,
-                'class_id' => $class_id
-            ];
-            delete($conn, 'user_has_class', $values);
+
+            $where = "user_id = " . $user_id . " And class_id = " . $class_id;
+            delete($conn, 'user_has_class', $where);
 
             $user_id = $_GET['user_id'];
             $where = 'id =' . $user_id;

@@ -54,10 +54,8 @@ if (isset($_POST['edit'])) {
 if (isset($_GET['type']) && $_GET['type'] == 'delete') {
     if (isset($_GET['id'])) {
         $user_id = $_GET['id'];
-        $values = [
-            'id' => $user_id
-        ];
-        delete($conn, 'class', $values);
+        $where = "id = ". $user_id;
+        delete($conn, 'class', $where);
         header('location: classes.php');
         exit;
     }

@@ -12,10 +12,9 @@ if (isset($_GET['type']) && $_GET['type'] == 'approve') {
 //User request delete code
 } elseif (isset($_GET['type']) && $_GET['type'] == 'un_approve') {
     $user_id = $_GET['id'];
-    $values = [
-        'id' => $user_id
-    ];
-    delete($conn, 'user', $values);
+
+    $where = "id = ". $user_id;
+    delete($conn, 'user', $where);
     header('location: requested');
     exit;
 }

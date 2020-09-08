@@ -7,11 +7,9 @@ if (isset($_GET['type']) && $_GET['type'] == 'un_assign') {
     if (isset($_GET['id'])) {
         $user_id = $_GET['user_id'];
         $subject_id = $_GET['id'];
-        $values = [
-            'user_id' => $user_id,
-            'subject_id' => $subject_id
-        ];
-        delete($conn, 'user_has_subject', $values);
+
+        $where = "user_id = " . $user_id . " And subject_id = " . $subject_id;
+        delete($conn, 'user_has_subject', $where);
         $user_id = $_GET['user_id'];
         $where = 'id =' . $user_id;
         $data = show($conn, 'user', 1, $where);

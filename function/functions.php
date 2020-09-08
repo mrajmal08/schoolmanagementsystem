@@ -53,17 +53,11 @@ function insert($conn, $table, $columns, $values, $data)
  * @param $values
  * @return mixed
  */
-function delete($conn, $table, $values)
+function delete($conn, $table, $where)
 {
-    $query = "DELETE FROM {$table} WHERE ";
-    $count = 0;
-    foreach ($values as $key => $value) {
-        if ($count == 0) {
-            $query .= "{$key} = '{$value}' ";
-        } else {
-            $query .= "AND {$key} = '{$value}' ";
-        }
-        $count++;
+    $query = "DELETE FROM {$table} ";
+    if(!empty($where)){
+        $query .= " WHERE " . $where;
     }
     $exe = $conn->prepare($query);
     return $exe->execute();
