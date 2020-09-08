@@ -183,10 +183,8 @@ function assign_class_subject($conn, $user_id, $class_id = null, $subject_id = n
             $where = "user_id = ".$user_id. " AND class_id = ". $class_id;
             $result = show($conn, 'user_has_class',false, $where);
             if (isset($result['user_id']) && isset($result['class_id'])) {
-
-                if (empty($result['user_id']) && empty($result['class_id'])) {
+                if ($result['user_id'] > 1 && $result['class_id'] > 1) {
                     return "<span style='color: red'>class already asssigned</span>";
-
                 }
             } else {
                 //getting columns and values for insert query
@@ -236,7 +234,7 @@ function login_user($conn, $email, $password)
     if ($email != "" && $password != "") {
         try {
             //check user for verification
-            $where = "email = " . $email . " AND password = " . $password . " AND status = 1";
+            $where = " email = '" . $email . "' AND password = '" . $password . "' AND status = 1";
             $row = show($conn, 'user', 1, $where);
             if (!empty($row) && $row) {
                 $_SESSION['sess_user_id'] = $row['id'];
